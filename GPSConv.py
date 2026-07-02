@@ -93,7 +93,7 @@ class GatedProjectionShortConv(nn.Module):
 
 
 class GPSConvBlock(nn.Module):
-    def __init__(self, dim, num_patch):
+    def __init__(self, dim):
 
         super().__init__()
 
@@ -125,11 +125,11 @@ class GPSConvBlock(nn.Module):
 
 
 class GPSConv(nn.Module):
-    def __init__(self, d_model,num_patch, num_layers):
+    def __init__(self, d_model, num_layers):
         super().__init__()
 
         self.model = nn.Sequential(
-            *[GPSConvBlock(d_model,num_patch) for _ in range(num_layers)]
+            *[GPSConvBlock(d_model) for _ in range(num_layers)]
         )
 
     def forward(self, x):
