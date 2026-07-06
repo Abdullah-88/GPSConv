@@ -2,7 +2,6 @@ import torch
 from torch import nn, Tensor
 import torch.nn.functional as F
 
-
 class VecDyT(nn.Module):
     def __init__(self, input_shape):
 
@@ -13,7 +12,6 @@ class VecDyT(nn.Module):
     def forward(self, x):
         x = torch.tanh(self.alpha * x)
         return x
-
 
 class VecDyGeluSine(nn.Module):
     def __init__(self, input_shape):
@@ -28,8 +26,6 @@ class VecDyGeluSine(nn.Module):
 
     def forward(self, x):
 
-
-
         x = self.gamma * self.gelu(self.alpha * x) + self.etta * torch.sin(self.beta * x)
 
         return x
@@ -42,7 +38,6 @@ class FFUnit(nn.Module):
         self.proj =  nn.Linear(dim,dim,bias=False)
         self.modulate = VecDyGeluSine(dim)
 
-
     def forward(self, x):
 
         u, v = x, x
@@ -52,9 +47,6 @@ class FFUnit(nn.Module):
         g = u * v
 
         return g
-
-
-
 
 class GatedProjectionShortConv(nn.Module):
     def __init__(self, dim, kernel_size=4):
@@ -75,21 +67,15 @@ class GatedProjectionShortConv(nn.Module):
     def forward(self, x):
       
         B, L, D = x.shape
-        
-       
+               
         x_conv = x.transpose(1, 2)
         x_conv = self.short_conv(x_conv)[..., :L] 
         x_conv = x_conv.transpose(1, 2) 
-        
-       
+               
         gate = self.modulate(x_conv)
         value = self.proj(x_conv)
-        
-        
+                
         return gate * value
-
-
-
 
 class GPSConvBlock(nn.Module):
     def __init__(self, dim):
@@ -100,7 +86,6 @@ class GPSConvBlock(nn.Module):
         self.norm_2 =  VecDyT(dim)
         self.gpsConv = GatedProjectionShortConv(dim)
         self.feedforward = FFUnit(dim)
-
 
     def forward(self, x):
         
@@ -122,7 +107,6 @@ class GPSConvBlock(nn.Module):
 
         return x
 
-
 class GPSConv(nn.Module):
     def __init__(self, d_model, num_layers):
         super().__init__()
@@ -134,4 +118,3 @@ class GPSConv(nn.Module):
     def forward(self, x):
 
         return self.model(x)
-
