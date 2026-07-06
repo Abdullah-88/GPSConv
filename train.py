@@ -122,7 +122,7 @@ def test(dataloader, model, loss_fn):
     test_accuracy = 100*correct
     return test_loss, test_accuracy
 
-logname = "/PATH/Experiments_cifar10/logs_gpsconv/logs_cifar10.csv"
+logname = "/PATH/GPSConv/Experiments_cifar10/logs_gpsconv/logs_cifar10.csv"
 if not os.path.exists(logname):
   with open(logname, 'w') as logfile:
     logwriter = csv.writer(logfile, delimiter=',')
@@ -141,7 +141,7 @@ for epoch in range(epochs):
         
 print("Done!")
 
-path = "/PATH/Experiments_cifar10/weights_gpsconv"
+path = "/PATH/GPSConv/Experiments_cifar10/weights_gpsconv"
 model_name = "GPSConvImageClassification_cifar10"
 torch.save(model.state_dict(), f"{path}/{model_name}.pth")
 print(f"Saved Model State to {path}/{model_name}.pth ")
