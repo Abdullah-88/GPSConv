@@ -31,11 +31,11 @@ class VecDyGeluSine(nn.Module):
         return x
 
 class FFUnit(nn.Module):
-    def __init__(self,dim):
+    def __init__(self, dim):
 
         super().__init__()
 
-        self.proj =  nn.Linear(dim,dim,bias=False)
+        self.proj = nn.Linear(dim, dim, bias = False)
         self.modulate = VecDyGeluSine(dim)
 
     def forward(self, x):
@@ -49,19 +49,19 @@ class FFUnit(nn.Module):
         return g
 
 class GatedProjectionShortConv(nn.Module):
-    def __init__(self, dim, kernel_size=4):
+    def __init__(self, dim, kernel_size = 4):
         super().__init__()
         self.dim = dim
         
         self.short_conv = nn.Conv1d(
-            in_channels=dim,
-            out_channels=dim,
-            kernel_size=kernel_size,
-            padding=kernel_size - 1,
-            groups=dim 
+            in_channels = dim,
+            out_channels = dim,
+            kernel_size = kernel_size,
+            padding = kernel_size - 1,
+            groups = dim 
         )
       
-        self.proj =  nn.Linear(dim,dim,bias=False)
+        self.proj = nn.Linear(dim, dim, bias = False)
         self.modulate = VecDyGeluSine(dim)
 
     def forward(self, x):
@@ -82,8 +82,8 @@ class GPSConvBlock(nn.Module):
 
         super().__init__()
 
-        self.norm_1 =  VecDyT(dim)
-        self.norm_2 =  VecDyT(dim)
+        self.norm_1 = VecDyT(dim)
+        self.norm_2 = VecDyT(dim)
         self.gpsConv = GatedProjectionShortConv(dim)
         self.feedforward = FFUnit(dim)
 
